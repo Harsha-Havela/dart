@@ -59,3 +59,11 @@ class Enrollment < ApplicationRecord
   belongs_to :student
   belongs_to :course
 end
+
+html:
+
+Invoke-WebRequest "https://text.pollinations.ai/Generate%20HTML%20code%20with%20proper%20CSS%20styling%20and%20JavaScript%20for%20form%20validation." -OutFile form.html
+
+ruby:
+
+Invoke-WebRequest "https://text.pollinations.ai/ruby%20code%20for%20library%20management%20system%20using%20oops%20concept." -OutFile book.rb
