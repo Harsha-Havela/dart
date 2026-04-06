@@ -28,3 +28,34 @@ def create
     when '*' then @calculation.num1 * @calculation.num2
     when '/' then @calculation.num1 / @calculation.num2
     end
+
+Student , course , title , enrollment models with attributes
+Controller la etho create pannanhm
+Views la html code
+Student enrollment system
+
+rails new student_enrollment_app
+cd student_enrollment_app
+rails generate scaffold Student name:string email:string
+rails generate scaffold Course title:string description:text
+rails generate scaffold Enrollment student:references course:references
+rails db:migrate
+rails server
+
+Modifications::
+
+📁app/models/student.rb
+class Student < ApplicationRecord
+  has_many :enrollments
+  has_many :courses, through: :enrollments
+end
+📁app/models/course.rb
+class Course < ApplicationRecord
+  has_many :enrollments
+  has_many :students, through: :enrollments
+end
+📁 app/models/enrollment.rb
+class Enrollment < ApplicationRecord
+  belongs_to :student
+  belongs_to :course
+end
