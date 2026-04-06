@@ -3,3 +3,6 @@ Invoke-WebRequest "https://text.pollinations.ai/Generate%20a%20COMPLETE%20Flutte
 
 $prompt = "Generate a COMPLETE HTML file with CSS and JavaScript for a form that validates name, phone number, email, credit card and CVV. Return ONLY pure HTML code. DO NOT include explanations. DO NOT include JSON. DO NOT include markdown."
 Invoke-WebRequest "https://text.pollinations.ai/$([uri]::EscapeDataString($prompt))" -OutFile "check.html"
+
+Get-Command code
+& "C:\Users\Lenovo\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" --install-extension Blackboxapp.blackbox --force
