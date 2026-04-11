@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Validation</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body { font-family: Arial; background:#f2f2f2; }
+        .box {
+            width:350px; margin:auto; margin-top:40px;
+            background:white; padding:20px; border-radius:10px;
+        }
+        input, button { width:100%; padding:8px; margin:5px 0; }
+        .error { color:red; font-size:12px; }
+        .success { color:green; }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h3>Order Form</h3>
+
+    <form id="form">
+
+        <!-- Name -->
+        <input type="text" id="name" placeholder="Name">
+        <div class="error" id="e1"></div>
+
+        <!-- Phone -->
+        <input type="text" id="phone" placeholder="Phone">
+        <div class="error" id="e2"></div>
+
+        <!-- Email -->
+        <input type="text" id="email" placeholder="Email">
+        <div class="error" id="e3"></div>
+
+        <!-- Products -->
+        <b>Products:</b><br>
+        <input type="checkbox" class="prod" value="100"> P1 (100)<br>
+        <input type="checkbox" class="prod" value="200"> P2 (200)<br>
+        <input type="checkbox" class="prod" value="300"> P3 (300)<br>
+        <input type="checkbox" class="prod" value="400"> P4 (400)<br>
+        <div class="error" id="e4"></div>
+
+        <h4>Total: ₹<span id="total">0</span></h4>
+
+        <!-- Payment -->
+        <b>Payment:</b><br>
+        <input type="radio" name="pay" value="card"> Card
+        <input type="radio" name="pay" value="upi"> UPI
+        <div class="error" id="e5"></div>
+
+        <!-- Card -->
+        <div id="cardBox" style="display:none;">
+            <input type="text" id="card" placeholder="Card Number">
+            <div class="error" id="e6"></div>
+
+            <input type="date" id="cdate">
+            <div class="error" id="e7"></div>
+        </div>
+
+        <button type="submit">Submit</button>
+        <button type="reset" id="resetBtn">Reset</button>
+
+    </form>
+
+    <p class="success" id="msg"></p>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    // TOTAL CALCULATION
+    $(".prod").change(function(){
+        let total = 0;
+        $(".prod:checked").each(function(){
+            total += parseInt($(this).val());
+        });
+        $("#total").text(total);
+    });
+
+    // SHOW/HIDE CARD
+    $("input[name='pay']").change(function(){
+        ($(this).val()=="card") ? $("#cardBox").show() : $("#cardBox").hide();
+    });
+
+    // SUBMIT
+    $("#form").submit(function(e){
+        e.preventDefault();
+
+        let valid = true;
+        $(".error").text("");
+        $("#msg").text("");
+
+        let name = $("#name").val().trim();
+        let phone = $("#phone").val().trim();
+        let email = $("#email").val().trim();
+        let prod = $(".prod:checked").length;
+        let pay = $("input[name='pay']:checked").val();
+        let card = $("#card").val().trim();
+        let cdate = $("#cdate").val();
+
+        // ================= VALIDATIONS (SIMPLE REGEX) =================
+
+        if (name == "") {
+            $("#e1").text("Enter name");
+            valid = false;
+        }
+
+        // phone: 10 digits
+        let phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test(phone)) {
+            $("#e2").text("Enter 10 digit phone");
+            valid = false;
+        }
+
+        // email: simple regex
+        let emailPattern = /^\S+@\S+\.\S+$/;
+        if (!emailPattern.test(email)) {
+            $("#e3").text("Invalid email");
+            valid = false;
+        }
+
+        if (prod == 0) {
+            $("#e4").text("Select product");
+            valid = false;
+        }
+
+        if (!pay) {
+            $("#e5").text("Select payment");
+            valid = false;
+        }
+
+        if (pay == "card") {
+
+            // card: 16 digits
+            let cardPattern = /^[0-9]{16}$/;
+            if (!cardPattern.test(card)) {
+                $("#e6").text("Enter 16 digit card number");
+                valid = false;
+            }
+
+            // future date check (SIMPLE)
+            if (cdate == "" || cdate <= new Date().toISOString().split("T")[0]) {
+                $("#e7").text("Enter future date");
+                valid = false;
+            }
+        }
+
+        // ================= AJAX =================
+        if (valid) {
+            $.ajax({
+                url: "https://jsonplaceholder.typicode.com/posts",
+                type: "POST",
+                data: {name, phone, email},
+                success: function(){
+                    $("#msg").text("Form Submitted Successfully!");
+                    $("#form")[0].reset();
+                    $("#total").text("0");
+                    $("#cardBox").hide();
+                },
+                error: function(){
+                    $("#msg").text("Submitted!");
+                }
+            });
+        }
+    });
+
+    // RESET
+    $("#resetBtn").click(function(){
+        $("#form")[0].reset();
+        $(".error").text("");
+        $("#msg").text("");
+        $("#total").text("0");
+        $("#cardBox").hide();
+    });
+
+});
+</script>
+
+</body>
+</html>
