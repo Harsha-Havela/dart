@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Registration Form </title>
+	
+	<style>
+		body{
+		font-family : Arial;
+		font-size : 12px;
+		}
+		
+		.container{
+			width : 500px;
+			margin:80px auto;
+			padding:20px;
+			border-radius :10px;
+			background: lighter;
+		}
+		
+		h2{
+			text-align: center;
+		}
+		
+		input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+		
+		.option-group{
+			display: flex;
+			gap: 30px;
+			margin: 10px 0;
+		}
+
+		.option-group label{
+			display: flex;
+			align-items: center;
+			gap: 5px;  /* space between symbol and text */
+			font-weight: normal;
+		}
+		
+		button{
+			width: 30%;          
+			display: block;      
+			margin: 15px auto;  
+			padding: 10px;
+			background: white;
+			color: blue;
+			border-radius: 10px;
+			border: 2px solid black;
+}
+		
+		button:hover{
+			background :gray;
+		}
+		
+		.error{
+			color:red;
+			font-size:12px;
+		}
+		
+		.success{
+			color:green;
+			font-size:14px;
+			margin-bottom : 10px;
+			text-align:center;
+		}
+		
+	</style>
+</head>
+
+<body>
+<div class="container">
+	<h2> Registration Form </h2>
+	<form onsubmit="return validateform()">
+		
+		<label for="name"><b>First Name</label>
+		<input type="text" id="name">
+		<div class="error" id="nameerror"></div>
+		
+		<b>Email:<br>
+		<input type="text" id="email">
+		<div class="error" id="emailerror"></div>
+		
+		<b>Password:<br>
+		<input type="text" id="password">
+		<div class="error" id="passerror"></div>
+		
+		<label>Room Type:</label>
+		<div class="option-group">
+		<label><input type="radio" name="room">Select</label>
+		<label><input type="radio" name="room">Suite</label>
+		</div>
+		
+		
+		<label>Facility:</label>
+		<div class="option-group">
+		<label><input type="checkbox"> AC</label>
+		</div>
+		
+		Number of guest:
+		<input type="number" id="guest" min="1" max="6">
+		<div class="error" id="guesterror"></div>
+		
+		<textarea name="comment" rows="10" cols="30">
+		Hi.
+		</textarea><br>
+		Choose:
+		<select id="car">
+			<option>BMW</option>
+			<option>Volvo</option>
+		</select><br>
+		
+		Birthday:
+		<input type="date" id="bday">
+		<div class="error" id= "dateerror"></div>
+		
+		<button type="submit" >Submit </button>
+		
+	</form>
+	<div class="success" id="successmsg"></div>
+	<pre id="jsonoutput"></pre>
+
+</div>
+<script>
+function validateform(){
+	
+	let name = document.getElementById("name").value;
+	let email = document.getElementById("email").value;
+	let password = document.getElementById("password").value;
+	let guest = document.getElementById("guest").value;
+    let bday = document.getElementById("bday").value;
+	let room = document.querySelector('input[name="room"]:checked');
+    let facility = document.querySelector('input[type="checkbox"]:checked');
+	
+	let valid = true;
+	
+	// Clear messages
+	document.getElementById("nameerror").innerHTML="";
+	document.getElementById("emailerror").innerHTML="";
+	document.getElementById("passerror").innerHTML="";
+	document.getElementById("successmsg").innerHTML="";
+	document.getElementById("jsonoutput").innerHTML="";
+	
+	if (name==""){
+		document.getElementById("nameerror").innerHTML= "Enter the valid name";
+		valid=false;
+	}
+	
+	if(email==""){
+		document.getElementById("emailerror").innerHTML="Enter the valid email";
+		valid=false;
+	}
+	
+	if(password==""){
+		document.getElementById("passerror").innerHTML= "Enter the valid password";
+		valid=false;
+	}
+	
+	if(valid){
+	
+		let formdata={
+			name:name,
+			email:email,
+			password:password,
+			room:room? room.parentElement.innerText.trim():"",
+			facility:facility? facility.parentElement.innerText.trim():"",
+			guests: guest,
+            birthday: bday
+		}
+		
+		let jsondata= JSON.stringify(formdata,null,4);
+		
+		
+		document.getElementById("successmsg").innerHTML= "Registration Successful";
+		document.getElementById("jsonoutput").innerText = jsondata;
+		document.getElementById("name").value="";
+		document.getElementById("email").value="";
+		document.getElementById("password").value="";
+	}
+	
+	return false;
+}
+</script>
+</body>
+</html>
