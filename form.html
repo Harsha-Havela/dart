@@ -182,3 +182,26 @@ $(document).ready(function(){
 
 </body>
 </html>
+
+json
+
+success: function(){
+
+    // convert data to JSON
+    let json = JSON.stringify({
+        name: name,
+        phone: phone,
+        email: email,
+        total: $("#total").text(),
+        payment: pay
+    }, null, 2); // pretty format
+
+    // display JSON
+    $("#jsonData").text(json);
+
+    $("#msg").text("Form Submitted Successfully!");
+
+    $("#form")[0].reset();
+    $("#total").text("0");
+    $("#cardBox").hide();
+}
